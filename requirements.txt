@@ -1,0 +1,5 @@
+SpeechRecognition
+pydub
+pygame
+openai-whisper
+wheel 
