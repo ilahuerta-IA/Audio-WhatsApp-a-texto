@@ -3,153 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagrama de Bloques - Audio a Texto Pro</title>
+    <title>Diagrama Arquitectura - Audio a Texto Pro (Refactorizado)</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px; /* Reducido un poco */
             padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #f8f9fa; /* Gris más suave */
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
         .block {
             border: 1px solid #ccc;
-            padding: 15px;
+            padding: 12px 18px; /* Ajustado */
             text-align: center;
             background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            width: fit-content;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+            width: auto; /* Ajustado */
+            max-width: 400px; /* Límite para descripciones largas */
         }
-        .arrow-down {
+        .main-entry { /* main.py */
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .gui-hub { /* gui.py */
+            border-color: #007bff;
+            background-color: #cce5ff;
+            border-width: 2px;
+        }
+        .transcriber-block { /* google_transcriber.py, whisper_transcriber.py */
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+         .handler-module { /* audio_handler.py, playback.py */
+            border-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .util-module { /* utils.py, config.py */
+            border-color: #6c757d;
+            background-color: #e2e3e5;
+        }
+        .arrow-down, .arrow-up {
             text-align: center;
-            font-size: 1.5em;
+            font-size: 1.8em;
             color: #555;
+            line-height: 0.5; /* Más compacto */
         }
-        .arrow-right {
+        .arrow-right, .arrow-left {
             display: inline-block;
-            font-size: 1.5em;
+            font-size: 1.8em;
             color: #555;
             margin: 0 10px;
         }
-        .function-name {
+        .component-name {
             font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 1.1em;
+            margin-bottom: 6px;
         }
+         .file-name {
+             font-family: monospace;
+             font-size: 0.9em;
+             color: #e83e8c; /* Color para nombres de archivo */
+             margin-bottom: 6px;
+         }
         .description {
             font-size: 0.9em;
-            color: #777;
+            color: #555;
+            text-align: left; /* Mejor para leer */
+            margin-top: 5px;
         }
-        .user-action {
+         .interaction {
             font-style: italic;
-            color: #337ab7;
+            color: #0056b3; /* Azul más oscuro */
+            font-size: 0.85em;
+            margin-top: 8px;
+         }
+        .user-action {
+            font-weight: bold;
+            color: #007bff;
         }
-        .relationship {
+        .relationship-horizontal {
             display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
+            align-items: stretch; /* Para que bloques tengan misma altura */
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap; /* Si no caben, que bajen */
+            width: 100%;
+            max-width: 1000px; /* Límite ancho */
         }
-        .class-block {
-            border: 2px solid #5cb85c;
-            background-color: #dff0d8;
+        .relationship-vertical {
+             display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .sub-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border: 1px dashed #adb5bd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        code {
+            background-color: #e9ecef;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        .callback-info {
+            color: #fd7e14; /* Naranja */
+            font-weight: bold;
+        }
+        .thread-info {
+            color: #17a2b8; /* Cyan */
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1>Diagrama de Bloques - Audio a Texto Pro</h1>
+    <h1>Diagrama Arquitectura - Audio a Texto Pro (Refactorizado)</h1>
+    <p>Visión general de la estructura modular y las interacciones principales.</p>
 
-    <div class="block class-block">
-        <div class="function-name">AudioTranscriptorPro</div>
-        <div class="description">Clase principal que gestiona la interfaz y la lógica de la aplicación.</div>
-    </div>
+    <div class="container">
 
-    <div class="arrow-down">&darr;</div>
-
-    <div class="relationship">
-        <div class="block">
-            <div class="function-name">seleccionar_audio()</div>
-            <div class="description">Acción al pulsar el botón <span class="user-action">"Seleccionar Audio"</span>. Abre el diálogo para que el usuario elija un archivo de audio.</div>
+        <div class="block main-entry">
+            <div class="file-name">main.py</div>
+            <div class="component-name">Punto de Entrada</div>
+            <div class="description">Inicia la aplicación. Crea la ventana principal y la instancia de <code>AudioTranscriptorPro</code>. Maneja el ciclo de vida y la limpieza final.</div>
         </div>
-        <div class="arrow-right">&rarr;</div>
-        <div class="block">
-            <div class="function-name">transcribir_audio()</div>
-            <div class="description">Acción al pulsar el botón <span class="user-action">"Transcribir"</span>. Inicia la transcripción con Google Speech y Whisper en segundo plano.</div>
-        </div>
-        <div class="arrow-right">&rarr;</div>
-        <div class="block">
-            <div class="function-name">terminar_transcripcion()</div>
-            <div class="description">Acción al pulsar el botón <span class="user-action">"Terminar"</span>. Detiene la transcripción de Google Speech pero permite que Whisper continúe.</div>
-        </div>
-    </div>
 
-    <div class="arrow-down">&darr;</div>
+        <div class="arrow-down">↓ Lanza</div>
 
-    <div class="relationship">
-        <div class="block">
-            <div class="function-name">transcribir_audio_google_speech()</div>
-            <div class="description">Función que se ejecuta en segundo plano para realizar la transcripción del audio utilizando Google Speech Recognition. Se activa al pulsar <span class="user-action">"Transcribir"</span>.</div>
+        <div class="block gui-hub">
+             <div class="file-name">gui.py</div>
+            <div class="component-name">AudioTranscriptorPro (Clase Principal GUI)</div>
+            <div class="description">
+                - Construye la interfaz gráfica (botones, áreas de texto, etc.).<br>
+                - Gestiona el estado general de la aplicación.<br>
+                - Recibe acciones del usuario (ej: <span class="user-action">Click Botón</span>).<br>
+                - **Orquesta** las operaciones delegando en otros módulos/clases.<br>
+                - Recibe resultados y actualiza la UI mediante <span class="callback-info">callbacks</span>.
+            </div>
         </div>
-        <div class="arrow-right">&rarr;</div>
-        <div class="block">
-            <div class="function-name">transcribir_audio_whisper_background()</div>
-            <div class="description">Función que se ejecuta en segundo plano para realizar la transcripción del audio completo utilizando el modelo Whisper de OpenAI. Se activa al pulsar <span class="user-action">"Transcribir"</span>.</div>
+
+        <div class="arrow-down">↓ Delega tareas / Usa ↓</div>
+
+        <!-- Módulos principales usados por la GUI -->
+        <div class="relationship-horizontal">
+
+            <div class="sub-group"> <!-- Grupo Handlers -->
+                <div class="block handler-module">
+                     <div class="file-name">audio_handler.py</div>
+                    <div class="component-name">Gestor de Audio</div>
+                    <div class="description">- Muestra diálogo para seleccionar archivo.<br>- Convierte audio a WAV estándar (usando <code>pydub</code>/<code>ffmpeg</code>).<br>- Gestiona archivos temporales.</div>
+                    <div class="interaction">Llamado por <code>gui.py</code> al seleccionar archivo.</div>
+                </div>
+                <div class="arrow-down">↓</div>
+                 <div class="block handler-module">
+                     <div class="file-name">playback.py</div>
+                    <div class="component-name">Control de Reproducción</div>
+                    <div class="description">- Inicializa y controla <code>pygame.mixer</code>.<br>- Funciones para cargar, reproducir, detener y descargar audio.</div>
+                    <div class="interaction">Usado principalmente por <code>GoogleTranscriber</code> (y potencialmente por <code>gui.py</code> para controles futuros).</div>
+                </div>
+            </div>
+
+            <div class="sub-group"> <!-- Grupo Transcriptores -->
+                <div class="block transcriber-block">
+                    <div class="file-name">google_transcriber.py</div>
+                    <div class="component-name">GoogleTranscriber (Clase)</div>
+                    <div class="description">- Lógica para transcribir con Google Speech Recognition.<br>- Funciona en un <span class="thread-info">hilo</span> separado.<br>- Utiliza <code>playback.py</code> para reproducir mientras transcribe.<br>- Reporta progreso/resultado a <code>gui.py</code> vía <span class="callback-info">callbacks</span>.</div>
+                    <div class="interaction">Instanciado y iniciado por <code>gui.py</code>.</div>
+                </div>
+                 <div class="arrow-down">↓↑ <span class="callback-info">Callbacks</span></div>
+                 <div class="block transcriber-block">
+                     <div class="file-name">whisper_transcriber.py</div>
+                    <div class="component-name">WhisperTranscriber (Clase)</div>
+                    <div class="description">- Lógica para cargar modelo Whisper y transcribir.<br>- Funciona en un <span class="thread-info">hilo</span> separado.<br>- Carga el modelo globalmente la primera vez.<br>- Reporta resultado a <code>gui.py</code> vía <span class="callback-info">callbacks</span>.</div>
+                    <div class="interaction">Instanciado y iniciado por <code>gui.py</code> (tras Google).</div>
+                </div>
+            </div>
+
+             <div class="sub-group"> <!-- Grupo Utilidades -->
+                 <div class="block util-module">
+                    <div class="file-name">utils.py</div>
+                    <div class="component-name">Utilidades</div>
+                    <div class="description">- Funciones auxiliares para la GUI (dibujar círculos, copiar al portapapeles, exportar a TXT).</div>
+                    <div class="interaction">Llamado por <code>gui.py</code> para acciones de copiar/exportar y UI.</div>
+                </div>
+                 <div class="arrow-down">↓</div>
+                <div class="block util-module">
+                    <div class="file-name">config.py</div>
+                    <div class="component-name">Configuración</div>
+                    <div class="description">- Almacena constantes globales (versión, tipos de archivo, nombre modelo Whisper, etc.).</div>
+                     <div class="interaction">Importado por la mayoría de los otros módulos.</div>
+                </div>
+            </div>
+
+        </div> <!-- Fin relationship-horizontal -->
+
+        <div class="arrow-up">↑ Comunican resultados / Usan utilidades ↑</div>
+
+         <div class="block gui-hub">
+             <div class="file-name">gui.py</div>
+            <div class="component-name">AudioTranscriptorPro (Receptor)</div>
+            <div class="description">
+                - Métodos <span class="callback-info">callback</span> (ej: <code>_update_texto_google</code>, <code>_on_whisper_complete</code>) se ejecutan para actualizar las áreas de texto y el estado general en la interfaz.
+            </div>
         </div>
-    </div>
 
-    <div class="arrow-down">&darr;</div>
+    </div> <!-- Fin container -->
 
-    <div class="relationship">
-        <div class="block">
-            <div class="function-name">actualizar_texto_google(texto)</div>
-            <div class="description">Función que actualiza el área de texto de la interfaz con la transcripción de Google Speech a medida que se va obteniendo.</div>
-        </div>
-        <div class="arrow-right">&rarr;</div>
-        <div class="block">
-            <div class="function-name">actualizar_texto_whisper(texto)</div>
-            <div class="description">Función que actualiza el área de texto de la interfaz con la transcripción completa de Whisper una vez finalizada.</div>
-        </div>
-    </div>
-
-    <div class="arrow-down">&darr;</div>
-
-    <div class="relationship">
-        <div class="block">
-            <div class="function-name">copiar_texto_google()</div>
-            <div class="description">Acción al pulsar el botón <span class="user-action">"Copiar Texto Google"</span>. Copia la transcripción de Google al portapapeles.</div>
-        </div>
-        <div class="arrow-right">&rarr;</div>
-        <div class="block">
-            <div class="function-name">exportar_texto_google()</div>
-            <div class="description">Acción al pulsar el botón <span class="user-action">"Exportar a TXT Google"</span>. Guarda la transcripción de Google en un archivo de texto.</div>
-        </div>
-    </div>
-
-    <div class="arrow-down">&darr;</div>
-
-    <div class="relationship">
-        <div class="block">
-            <div class="function-name">copiar_texto_whisper()</div>
-            <div class="description">Acción al pulsar el botón <span class="user-action">"Copiar Texto Whisper"</span>. Copia la transcripción de Whisper al portapapeles.</div>
-        </div>
-        <div class="arrow-right">&rarr;</div>
-        <div class="block">
-            <div class="function-name">exportar_texto_whisper()</div>
-            <div class="description">Acción al pulsar el botón <span class="user-action">"Exportar a TXT Whisper"</span>. Guarda la transcripción de Whisper en un archivo de texto.</div>
-        </div>
-    </div>
-
-    <div class="arrow-down">&darr;</div>
-
-    <div class="relationship">
-        <div class="block">
-            <div class="function-name">iniciar()</div>
-            <div class="description">Función que inicializa la aplicación y comienza el bucle principal de la interfaz gráfica.</div>
-        </div>
-    </div>
-
-    <p>Este diagrama representa una visión general de las principales relaciones entre la clase y las funciones de la aplicación.</p>
+    <p>Este diagrama muestra la separación de responsabilidades y el flujo general de interacción entre los componentes principales de la aplicación refactorizada.</p>
 </body>
 </html>
