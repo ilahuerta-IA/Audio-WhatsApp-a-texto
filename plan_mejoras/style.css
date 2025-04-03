@@ -1,0 +1,111 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+.plan-bloques {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.bloque {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.bloque:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.bloque h3 {
+    margin-top: 0;
+    color: #0056b3;
+}
+
+.bloque a {
+    text-decoration: none;
+    color: inherit; /* Hereda color del contenedor */
+    display: block; /* Hace que todo el bloque sea clickeable */
+    height: 100%;
+}
+
+.bloque p {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.status {
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.status-pendiente { background-color: #ffc107; color: #333; }
+.status-progreso { background-color: #17a2b8; color: white; }
+.status-completo { background-color: #28a745; color: white; }
+
+.detalle-pasos {
+    list-style: none;
+    padding-left: 0;
+}
+
+.detalle-pasos li {
+    background: #e9ecef;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 5px solid #007bff;
+}
+
+.detalle-pasos li strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #0056b3;
+}
+
+.nav-back {
+    margin-top: 20px;
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.nav-back:hover {
+    background-color: #5a6268;
+}
+
+/* Añadido para comentarios/notas */
+.nota {
+    font-style: italic;
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}

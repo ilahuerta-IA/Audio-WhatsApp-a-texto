@@ -1,6 +1,7 @@
 # gui.py
 """Clase principal de la Interfaz Gráfica de Usuario (GUI) para AudioTranscriptorPro."""
 
+
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
 import tkinter.font as tkFont
@@ -10,6 +11,7 @@ import threading
 # Importar módulos locales
 import config
 import utils
+from utils import check_nvidia_smi, check_pytorch_cuda # Añadir check_pytorch_cuda
 import audio_handler
 import playback
 from google_transcriber import GoogleTranscriber
@@ -24,6 +26,17 @@ class AudioTranscriptorPro:
         self.ventana.title(f"Audio a Texto Pro ({config.__version__}) - Google vs Whisper")
         self.ventana.configure(bg=config.BG_COLOR)
         self.ventana.protocol("WM_DELETE_WINDOW", self._on_closing) # Manejar cierre
+
+        # --- Realizar comprobación temprana del entorno ---
+        print("--- Comprobación inicial del entorno ---")
+        self.nvidia_drivers_detected = check_nvidia_smi() # Comprueba si están los drivers de Nvidia instalados
+        print(f"Detección preliminar de drivers NVIDIA (nvidia-smi): {self.nvidia_drivers_detected}")
+        self.pytorch_cuda_available = check_pytorch_cuda() # Comprueba si CUDA está disponible
+        print(f"Verificación PyTorch CUDA disponible: {self.pytorch_cuda_available}")
+        # --- Se elige si la transcripción es desde GPU disponible o CPU local ---
+        self.device_to_use = 'cuda' if self.pytorch_cuda_available else 'cpu'
+        print(f"Dispositivo seleccionado para la ejecución de modelos: '{self.device_to_use}'")
+        print("---------------------------------------")
 
         # Estado de la aplicación
         self.ruta_audio_original: pathlib.Path | None = None

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Bloque 3: Refinamiento UI/UX</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Bloque 3: Refinamiento UI/UX</h2>
+        <p><strong>Objetivo:</strong> Asegurar que las nuevas funcionalidades (selección de modelo Whisper, pausa/corrección interactiva) se integren de manera clara, intuitiva y fácil de usar en la interfaz gráfica existente.</p>
+        <p><strong>Estado:</strong> <span class="status status-pendiente">Pendiente</span></p>
+
+        <h3>Pasos Detallados:</h3>
+        <ol class="detalle-pasos">
+            <li>
+                <strong>3.1: Integrar Controles de Pausa/Corrección</strong>
+                - Diseñar y posicionar adecuadamente los nuevos botones ("Pausar y Corregir", "Confirmar Corrección y Continuar") en `gui.py`.
+                - Asegurar que estos botones solo estén activos/visibles en los estados apropiados de la aplicación (ej: durante transcripción Google, en pausa).
+                <p class="nota">Evaluar si son botones separados o si un botón cambia de texto/función según el estado.</p>
+            </li>
+            <li>
+                <strong>3.2: Añadir Feedback Visual Claro</strong>
+                - Implementar una barra de estado o etiqueta en la GUI que muestre claramente la fase actual: "Seleccionando archivo", "Transcribiendo (Google)", "Pausado - Editando", "Transcribiendo (Whisper - Modelo: [nombre])", "Completado", "Error".
+                - Indicar visualmente qué modelo de Whisper se está utilizando, especialmente si se permite la selección.
+                - Considerar añadir un indicador de progreso (si es factible, especialmente para Whisper).
+            </li>
+            <li>
+                <strong>3.3: Mejorar Interfaz de Edición</strong>
+                - Asegurar que el área de texto donde se muestra la transcripción de Google sea claramente identificable como editable cuando la aplicación esté en el estado `pausado_para_corregir`.
+                - Cambiar visualmente el estado del área de texto (borde, fondo) para indicar que está lista para edición.
+                - Deshabilitar la edición una vez que se confirma y se pasa a Whisper.
+            </li>
+            <li>
+                <strong>3.4: (Opcional / Depende Bloque 1) Integrar Selección de Modelo Whisper</strong>
+                - Si se implementa la selección de modelo en el Bloque 1, añadir un widget adecuado en la GUI (`gui.py`).
+                - Podría ser un menú desplegable (`ComboBox`) o botones de radio.
+                - Colocarlo en una sección de configuración o antes de iniciar la transcripción.
+                - Asegurar que el valor seleccionado se pase correctamente a `whisper_transcriber.py`.
+            </li>
+             <li>
+                <strong>3.5: Pruebas de Usabilidad y Refinamiento</strong>
+                - Realizar pruebas informales del flujo completo desde la perspectiva del usuario.
+                - Verificar que los nuevos controles sean fáciles de entender y usar.
+                - Recoger feedback (aunque sea propio) sobre posibles puntos de confusión o mejora en la interfaz.
+                - Ajustar diseño, textos y comportamiento según sea necesario.
+            </li>
+        </ol>
+
+        <a href="index.html" class="nav-back">← Volver al Plan General</a>
+    </div>
+</body>
+</html>

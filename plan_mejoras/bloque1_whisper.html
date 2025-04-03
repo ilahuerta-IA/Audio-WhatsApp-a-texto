@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Bloque 1: Mejorar Calidad Whisper</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Bloque 1: Mejorar Calidad Transcripción (Whisper)</h2>
+        <p><strong>Objetivo:</strong> Incrementar la precisión de Whisper usando modelos más grandes y aceleración por hardware (GPU), manteniendo compatibilidad con sistemas sin GPU.</p>
+        <p><strong>Estado:</strong> <span class="status status-pendiente">Pendiente</span></p>
+
+        <h3>Pasos Detallados:</h3>
+        <ol class="detalle-pasos">
+            <li>
+				<strong><a href="paso1_1_gpu_detect_winlinux.html">1.1: Detección de GPU y Entorno</a></strong>
+				- Implementar lógica (posiblemente en `main.py` o un `utils.py` mejorado) para detectar la presencia de GPU compatible (NVIDIA CUDA / Apple MPS).
+				- Instalar dependencias necesarias (ej: `torch` con soporte CUDA/MPS).
+				<p class="nota">Dependencia: PyTorch, `nvidia-smi` (Linux/Windows), `system_profiler SPDisplaysDataType` (macOS). Click en el título para detalle Win/Linux.</p>
+				<span class="status status-completo">Completado</span>
+			</li>
+            <li>
+                <strong><a href="paso1_2_model_param_cpu.html">1.2: Parametrizar Selección de Modelo Whisper (CPU)</a></strong>
+				- Modificar `config.py` para listar modelos viables en CPU (ej: 'tiny', 'base', 'small') y establecer uno por defecto.
+				- Permitir seleccionar el modelo a usar (inicialmente vía `config.py`, opcionalmente luego en la UI).
+				- Actualizar la carga del modelo para usar el modelo seleccionado.
+				<p class="nota">Enfocado en modelos ejecutables eficientemente en CPU. Click en título para detalle.</p>
+            </li>
+            <li>
+                <strong>1.3: Modificar `whisper_transcriber.py`</strong>
+                - Actualizar la carga del modelo Whisper para aceptar el nombre del modelo y el dispositivo (`cpu`, `cuda`, `mps`) como parámetros.
+                - Utilizar la detección del paso 1.1 para determinar el dispositivo a usar.
+                - Cargar el modelo seleccionado en el dispositivo adecuado.
+                <p class="nota">Considerar el impacto en la memoria RAM y VRAM al cargar modelos grandes.</p>
+            </li>
+             <li>
+                <strong>1.4: Pruebas y Validación</strong>
+                - Probar la transcripción con diferentes modelos en CPU.
+                - Probar la transcripción con diferentes modelos en GPU (si aplica).
+                - Verificar que el mecanismo de fallback funciona correctamente.
+                - Comparar precisión y tiempos de transcripción.
+            </li>
+             <li>
+                <strong>1.5 (Opcional): Añadir Selección de Modelo en UI</strong>
+                - Si se desea, añadir un elemento en `gui.py` (dropdown, radio buttons) para que el usuario elija el modelo Whisper antes de transcribir.
+                <p class="nota">Esto añade complejidad a la UI y al estado gestionado por `AudioTranscriptorPro`.</p>
+            </li>
+        </ol>
+
+        <a href="index.html" class="nav-back">← Volver al Plan General</a>
+    </div>
+</body>
+</html>
