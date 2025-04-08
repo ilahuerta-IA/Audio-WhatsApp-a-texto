@@ -10,7 +10,7 @@
     <div class="container">
         <h2>Bloque 1: Mejorar Calidad Transcripción (Whisper)</h2>
         <p><strong>Objetivo:</strong> Incrementar la precisión de Whisper usando modelos más grandes y aceleración por hardware (GPU), manteniendo compatibilidad con sistemas sin GPU.</p>
-        <p><strong>Estado:</strong> <span class="status status-pendiente">Pendiente</span></p>
+        <p><strong>Estado:</strong> <span class="status status-completo">Completado</span></p>
 
         <h3>Pasos Detallados:</h3>
         <ol class="detalle-pasos">
@@ -23,7 +23,7 @@
 			</li>
             <li>
                 <strong><a href="paso1_2_model_param_cpu.html">1.2: Parametrizar Selección de Modelo Whisper (CPU)</a></strong>
-				- Modificar `config.py` para listar modelos viables en CPU (ej: 'tiny', 'base', 'small') y establecer uno por defecto.
+				- Modificar `config.py` para listar modelos viables en CPU (ej: 'tiny', 'base', 'small' y 'medium' en audios cortos) y establecer uno por defecto.
 				- Permitir seleccionar el modelo a usar (inicialmente vía `config.py`, opcionalmente luego en la UI).
 				- Actualizar la carga del modelo para usar el modelo seleccionado.
 				<p class="nota">Enfocado en modelos ejecutables eficientemente en CPU. Click en título para detalle.</p>
@@ -41,11 +41,13 @@
                 - Probar la transcripción con diferentes modelos en GPU (si aplica).
                 - Verificar que el mecanismo de fallback funciona correctamente.
                 - Comparar precisión y tiempos de transcripción.
+				<p><strong>Estado:</strong> <span class="status status-completo">Completado</span></p>
             </li>
              <li>
                 <strong>1.5 (Opcional): Añadir Selección de Modelo en UI</strong>
                 - Si se desea, añadir un elemento en `gui.py` (dropdown, radio buttons) para que el usuario elija el modelo Whisper antes de transcribir.
                 <p class="nota">Esto añade complejidad a la UI y al estado gestionado por `AudioTranscriptorPro`.</p>
+				<p><strong>Estado:</strong> <span class="status status-completo">Completado</span></p>
             </li>
         </ol>
 

@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h3>Sub-Detalle Paso 1.2: Parametrizar Selección de Modelo Whisper (CPU)</h3>
-        <p><strong>Objetivo Específico:</strong> Permitir la selección y uso de diferentes modelos de Whisper que sean razonablemente ejecutables en CPU (ej: 'tiny', 'base', 'small'), configurando cuál usar.</p>
+        <p><strong>Objetivo Específico:</strong> Permitir la selección y uso de diferentes modelos de Whisper que sean razonablemente ejecutables en CPU (ej: 'tiny', 'base', 'small' y 'medium' en audio corto), configurando cuál usar.</p>
         <p><strong>Estado:</strong> <span class="status status-pendiente">Pendiente</span></p>
 
         <h4>Proceso Conceptual Detallado:</h4>
@@ -17,7 +17,7 @@
             <li>
                 <strong>1.2.1: Modificar `config.py`</strong>
                 - Añadir una constante para la lista de modelos recomendados para CPU, por ejemplo:
-                  `WHISPER_CPU_MODELS = ['tiny', 'base', 'small']`
+                  `WHISPER_CPU_MODELS = ['tiny', 'base', 'small', 'medium']`
                 - Modificar (o confirmar) la constante `WHISPER_MODEL_NAME` para que actúe como el modelo *por defecto* a usar si no se especifica otro. Asegurarse de que sea uno de la lista anterior (ej: `'tiny'` o `'base'`).
                   `WHISPER_MODEL_NAME = 'tiny' # Modelo por defecto`
                 <p class="nota">Esto centraliza la configuración inicial.</p>
