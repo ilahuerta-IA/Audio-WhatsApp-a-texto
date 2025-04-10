@@ -36,24 +36,11 @@ def convert_to_wav_if_needed(audio_path: pathlib.Path) -> pathlib.Path | None:
     """
     global _temp_wav_path
 
-    # --- INICIO MODIFICACIÓN ---
-    # ELIMINADO/COMENTADO: El chequeo rápido para .wav existentes.
-    # if audio_path.suffix.lower() == ".wav":
-    #     # INCORRECTO: Asumir que un .wav es siempre válido. Forzar re-lectura y re-escritura.
-    #     print("El archivo ya es WAV (se forzará re-lectura y exportación).")
-    #     # return audio_path # ¡NO DEVOLVER EL ORIGINAL!
-    # --- FIN MODIFICACIÓN ---
-
-
-    # Crear nombre para archivo temporal WAV (sobrescribirá si existe uno con el mismo nombre)
-    # Podríamos añadir un prefijo/sufijo único si la concurrencia fuera un problema,
-    # pero para una app de escritorio es generalmente seguro.
-    temp_wav_path_obj = audio_path.with_name(f"{audio_path.stem}_temp.wav") # Crear nombre un poco diferente
+    # Crear nombre para archivo temporal WAV
+    temp_wav_path_obj = audio_path.with_name(f"{audio_path.stem}_temp_playback.wav") # Nombre específico
 
     try:
         print(f"Intentando cargar: {audio_path.name}...")
-        # Usar from_file que es más genérico e intentará detectar el formato
-        # Pydub usará ffmpeg si es necesario
         audio = AudioSegment.from_file(str(audio_path))
 
         print(f"Cargado con éxito. Re-exportando a WAV estándar: {temp_wav_path_obj.name}...")
@@ -63,27 +50,23 @@ def convert_to_wav_if_needed(audio_path: pathlib.Path) -> pathlib.Path | None:
         _temp_wav_path = temp_wav_path_obj # Guardar ruta temporal
         return temp_wav_path_obj
     except pydub_exceptions.CouldntDecodeError as e:
-        # Este es el error probable si el archivo está muy corrupto o en formato inesperado
         error_msg = (f"Pydub/FFmpeg no pudo decodificar el archivo: {audio_path.name}. "
                      f"Puede estar corrupto o en un formato no soportado.\nError: {e}")
         print(error_msg)
         messagebox.showerror("Error de Carga/Conversión", error_msg)
     except FileNotFoundError as e:
-        # Error si ffmpeg no está instalado o no en el PATH
         error_msg = (f"No se encontró ffmpeg o ffprobe. Pydub los necesita.\n"
                      f"Asegúrate de que estén instalados y en el PATH del sistema.\nError: {e}")
         print(error_msg)
         messagebox.showerror("Error de Dependencia", error_msg)
     except Exception as e:
-        # Otros errores inesperados
         error_msg = f"Error inesperado al procesar {audio_path.name}: {e}"
         print(error_msg)
         messagebox.showerror("Error Inesperado", error_msg)
-        # Limpiar archivo temporal si se creó parcialmente
         if temp_wav_path_obj.exists():
             try:
                 os.remove(temp_wav_path_obj)
-            except OSError: pass # Ignorar si no se puede borrar
+            except OSError: pass
 
     _temp_wav_path = None # Falló la conversión/carga
     return None
@@ -102,7 +85,5 @@ def cleanup_temp_wav():
             _temp_wav_path = None
         except Exception as e:
             print(f"Advertencia: No se pudo eliminar el archivo WAV temporal {_temp_wav_path.name}: {e}")
-            # No re-lanzar, sólo advertir. El archivo podría estar bloqueado.
     else:
-        # Si _temp_wav_path no es None pero el archivo no existe, resetear la variable.
         _temp_wav_path = None
