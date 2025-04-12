@@ -3,142 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagrama Arquitectura - Audio a Texto Pro (Refactorizado)</title>
+    <title>Diagrama Arquitectura - Audio a Texto Pro (Whisper Edition)</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px; /* Reducido un poco */
-            padding: 20px;
-            background-color: #f8f9fa; /* Gris más suave */
-            color: #333;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-        .block {
-            border: 1px solid #ccc;
-            padding: 12px 18px; /* Ajustado */
-            text-align: center;
-            background-color: #fff;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-            width: auto; /* Ajustado */
-            max-width: 400px; /* Límite para descripciones largas */
-        }
-        .main-entry { /* main.py */
-            border-color: #dc3545;
-            background-color: #f8d7da;
-        }
-        .gui-hub { /* gui.py */
-            border-color: #007bff;
-            background-color: #cce5ff;
-            border-width: 2px;
-        }
-        .transcriber-block { /* google_transcriber.py, whisper_transcriber.py */
-            border-color: #28a745;
-            background-color: #d4edda;
-        }
-         .handler-module { /* audio_handler.py, playback.py */
-            border-color: #ffc107;
-            background-color: #fff3cd;
-        }
-        .util-module { /* utils.py, config.py */
-            border-color: #6c757d;
-            background-color: #e2e3e5;
-        }
-        .arrow-down, .arrow-up {
-            text-align: center;
-            font-size: 1.8em;
-            color: #555;
-            line-height: 0.5; /* Más compacto */
-        }
-        .arrow-right, .arrow-left {
-            display: inline-block;
-            font-size: 1.8em;
-            color: #555;
-            margin: 0 10px;
-        }
-        .component-name {
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 6px;
-        }
-         .file-name {
-             font-family: monospace;
-             font-size: 0.9em;
-             color: #e83e8c; /* Color para nombres de archivo */
-             margin-bottom: 6px;
-         }
-        .description {
-            font-size: 0.9em;
-            color: #555;
-            text-align: left; /* Mejor para leer */
-            margin-top: 5px;
-        }
-         .interaction {
-            font-style: italic;
-            color: #0056b3; /* Azul más oscuro */
-            font-size: 0.85em;
-            margin-top: 8px;
-         }
-        .user-action {
-            font-weight: bold;
-            color: #007bff;
-        }
-        .relationship-horizontal {
-            display: flex;
-            align-items: stretch; /* Para que bloques tengan misma altura */
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap; /* Si no caben, que bajen */
-            width: 100%;
-            max-width: 1000px; /* Límite ancho */
-        }
-        .relationship-vertical {
-             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .sub-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            border: 1px dashed #adb5bd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-        h1 {
-            color: #333;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 5px;
-        }
-        code {
-            background-color: #e9ecef;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-size: 0.9em;
-        }
-        .callback-info {
-            color: #fd7e14; /* Naranja */
-            font-weight: bold;
-        }
-        .thread-info {
-            color: #17a2b8; /* Cyan */
-            font-weight: bold;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 20px; background-color: #f8f9fa; color: #333; }
+        .container { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .block { border: 1px solid #ccc; padding: 12px 18px; text-align: center; background-color: #fff; border-radius: 6px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); width: auto; max-width: 450px; /* Aumentado ligeramente */ }
+        .main-entry { border-color: #dc3545; background-color: #f8d7da; }
+        .gui-hub { border-color: #007bff; background-color: #cce5ff; border-width: 2px; }
+        .transcriber-block { border-color: #28a745; background-color: #d4edda; }
+        .handler-module { border-color: #ffc107; background-color: #fff3cd; }
+        .util-module { border-color: #6c757d; background-color: #e2e3e5; }
+        .arrow-down, .arrow-up { text-align: center; font-size: 1.8em; color: #555; line-height: 0.5; }
+        .component-name { font-weight: bold; font-size: 1.1em; margin-bottom: 6px; }
+        .file-name { font-family: monospace; font-size: 0.9em; color: #e83e8c; margin-bottom: 6px; }
+        .description { font-size: 0.9em; color: #555; text-align: left; margin-top: 5px; }
+        .interaction { font-style: italic; color: #0056b3; font-size: 0.85em; margin-top: 8px; }
+        .user-action { font-weight: bold; color: #007bff; }
+        .relationship-horizontal { display: flex; align-items: stretch; justify-content: center; gap: 15px; flex-wrap: wrap; width: 100%; max-width: 1000px; }
+        .sub-group { display: flex; flex-direction: column; align-items: center; gap: 10px; border: 1px dashed #adb5bd; padding: 15px; border-radius: 8px; margin-top: 10px; }
+        h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 5px; }
+        code { background-color: #e9ecef; padding: 2px 4px; border-radius: 3px; font-size: 0.9em; }
+        .callback-info { color: #fd7e14; font-weight: bold; }
+        .thread-info { color: #17a2b8; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>Diagrama Arquitectura - Audio a Texto Pro (Refactorizado)</h1>
+    <h1>Diagrama Arquitectura - Audio a Texto Pro (Whisper Edition)</h1>
     <p>Visión general de la estructura modular y las interacciones principales.</p>
 
     <div class="container">
@@ -146,7 +36,7 @@
         <div class="block main-entry">
             <div class="file-name">main.py</div>
             <div class="component-name">Punto de Entrada</div>
-            <div class="description">Inicia la aplicación. Crea la ventana principal y la instancia de <code>AudioTranscriptorPro</code>. Maneja el ciclo de vida y la limpieza final.</div>
+            <div class="description">Inicia la aplicación. Crea la ventana raíz Tkinter y la instancia de <code>AudioTranscriptorPro</code>. Gestiona el bucle principal y la limpieza al salir.</div>
         </div>
 
         <div class="arrow-down">↓ Lanza</div>
@@ -155,11 +45,11 @@
              <div class="file-name">gui.py</div>
             <div class="component-name">AudioTranscriptorPro (Clase Principal GUI)</div>
             <div class="description">
-                - Construye la interfaz gráfica (botones, áreas de texto, etc.).<br>
-                - Gestiona el estado general de la aplicación.<br>
+                - Construye y gestiona todos los widgets de la interfaz (Tkinter).<br>
+                - Mantiene el estado de la aplicación (modelo cargado, archivo seleccionado, modo depuración, etc.).<br>
                 - Recibe acciones del usuario (ej: <span class="user-action">Click Botón</span>).<br>
-                - **Orquesta** las operaciones delegando en otros módulos/clases.<br>
-                - Recibe resultados y actualiza la UI mediante <span class="callback-info">callbacks</span>.
+                - **Orquesta** las operaciones: llama a otros módulos para cargar modelo, convertir audio, iniciar transcripción, controlar playback.<br>
+                - Actualiza la UI (estado, texto, resaltado) en respuesta a <span class="callback-info">callbacks</span> desde otros módulos/hilos.
             </div>
         </div>
 
@@ -171,32 +61,25 @@
             <div class="sub-group"> <!-- Grupo Handlers -->
                 <div class="block handler-module">
                      <div class="file-name">audio_handler.py</div>
-                    <div class="component-name">Gestor de Audio</div>
-                    <div class="description">- Muestra diálogo para seleccionar archivo.<br>- Convierte audio a WAV estándar (usando <code>pydub</code>/<code>ffmpeg</code>).<br>- Gestiona archivos temporales.</div>
-                    <div class="interaction">Llamado por <code>gui.py</code> al seleccionar archivo.</div>
+                    <div class="component-name">Gestor de Archivo/Conversión</div>
+                    <div class="description">- Muestra diálogo de selección de archivo.<br>- Usa <code>pydub</code>/<code>ffmpeg</code> para convertir el audio seleccionado a formato WAV estándar temporal.<br>- Gestiona la limpieza del archivo WAV temporal.</div>
+                    <div class="interaction">Llamado por <code>gui.py</code> al seleccionar archivo. Devuelve ruta WAV.</div>
                 </div>
                 <div class="arrow-down">↓</div>
                  <div class="block handler-module">
                      <div class="file-name">playback.py</div>
-                    <div class="component-name">Control de Reproducción</div>
-                    <div class="description">- Inicializa y controla <code>pygame.mixer</code>.<br>- Funciones para cargar, reproducir, detener y descargar audio.</div>
-                    <div class="interaction">Usado principalmente por <code>GoogleTranscriber</code> (y potencialmente por <code>gui.py</code> para controles futuros).</div>
+                    <div class="component-name">Control de Reproducción (Pygame)</div>
+                    <div class="description">- Inicializa y controla <code>pygame.mixer</code>.<br>- Funciones para cargar, reproducir (<code>play</code>), pausar (<code>pause</code>), reanudar (<code>unpause</code>), detener (<code>stop</code>), obtener posición (<code>get_pos</code>) y descargar audio.</div>
+                    <div class="interaction">Usado por <code>gui.py</code> exclusivamente durante el modo Depuración.</div>
                 </div>
             </div>
 
-            <div class="sub-group"> <!-- Grupo Transcriptores -->
-                <div class="block transcriber-block">
-                    <div class="file-name">google_transcriber.py</div>
-                    <div class="component-name">GoogleTranscriber (Clase)</div>
-                    <div class="description">- Lógica para transcribir con Google Speech Recognition.<br>- Funciona en un <span class="thread-info">hilo</span> separado.<br>- Utiliza <code>playback.py</code> para reproducir mientras transcribe.<br>- Reporta progreso/resultado a <code>gui.py</code> vía <span class="callback-info">callbacks</span>.</div>
-                    <div class="interaction">Instanciado y iniciado por <code>gui.py</code>.</div>
-                </div>
-                 <div class="arrow-down">↓↑ <span class="callback-info">Callbacks</span></div>
+            <div class="sub-group"> <!-- Grupo Transcriptor -->
                  <div class="block transcriber-block">
                      <div class="file-name">whisper_transcriber.py</div>
                     <div class="component-name">WhisperTranscriber (Clase)</div>
-                    <div class="description">- Lógica para cargar modelo Whisper y transcribir.<br>- Funciona en un <span class="thread-info">hilo</span> separado.<br>- Carga el modelo globalmente la primera vez.<br>- Reporta resultado a <code>gui.py</code> vía <span class="callback-info">callbacks</span>.</div>
-                    <div class="interaction">Instanciado y iniciado por <code>gui.py</code> (tras Google).</div>
+                    <div class="description">- Lógica para cargar modelo Whisper (en <span class="thread-info">hilo</span>, con caché global) y transcribir audio (en <span class="thread-info">hilo</span>).<br>- Usa la librería <code>openai-whisper</code>.<br>- Gestiona el estado del modelo cargado.<br>- Reporta progreso de carga y resultado de transcripción (dict completo con texto y segmentos) a <code>gui.py</code> vía <span class="callback-info">callbacks</span>.</div>
+                    <div class="interaction">Instanciado y controlado por <code>gui.py</code>.</div>
                 </div>
             </div>
 
@@ -204,27 +87,27 @@
                  <div class="block util-module">
                     <div class="file-name">utils.py</div>
                     <div class="component-name">Utilidades</div>
-                    <div class="description">- Funciones auxiliares para la GUI (dibujar círculos, copiar al portapapeles, exportar a TXT).</div>
-                    <div class="interaction">Llamado por <code>gui.py</code> para acciones de copiar/exportar y UI.</div>
+                    <div class="description">- Funciones auxiliares: dibujar círculos de estado, copiar al portapapeles, exportar a TXT, comprobar entorno (<code>nvidia-smi</code>, <code>pytorch-cuda</code>).</div>
+                    <div class="interaction">Llamado por <code>gui.py</code> para acciones y comprobaciones.</div>
                 </div>
                  <div class="arrow-down">↓</div>
                 <div class="block util-module">
                     <div class="file-name">config.py</div>
                     <div class="component-name">Configuración</div>
-                    <div class="description">- Almacena constantes globales (versión, tipos de archivo, nombre modelo Whisper, etc.).</div>
-                     <div class="interaction">Importado por la mayoría de los otros módulos.</div>
+                    <div class="description">- Almacena constantes globales: versión, tipos de archivo, lista de modelos Whisper, colores UI, timeouts, etc.</div>
+                     <div class="interaction">Importado por la mayoría de los otros módulos para acceder a valores fijos.</div>
                 </div>
             </div>
 
         </div> <!-- Fin relationship-horizontal -->
 
-        <div class="arrow-up">↑ Comunican resultados / Usan utilidades ↑</div>
+         <div class="arrow-up">↑ Comunican resultados (<span class="callback-info">Callbacks</span>) / Usan utilidades ↑</div>
 
          <div class="block gui-hub">
              <div class="file-name">gui.py</div>
             <div class="component-name">AudioTranscriptorPro (Receptor)</div>
             <div class="description">
-                - Métodos <span class="callback-info">callback</span> (ej: <code>_update_texto_google</code>, <code>_on_whisper_complete</code>) se ejecutan para actualizar las áreas de texto y el estado general en la interfaz.
+                - Métodos <span class="callback-info">callback</span> (ej: <code>_update_texto_whisper</code>, <code>_on_whisper_transcription_complete</code>) reciben datos de los hilos/módulos y actualizan de forma segura los widgets de Tkinter (áreas de texto, etiquetas de estado, botones).
             </div>
         </div>
 

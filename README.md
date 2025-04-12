@@ -1,87 +1,112 @@
-# Audio a Texto Pro - Comparativa Google vs Whisper
+# Audio a Texto Pro (Whisper Edition)
 
-Aplicación de escritorio simple para transcribir archivos de audio utilizando dos motores de reconocimiento de voz: Google Speech Recognition (a través de la librería `speech_recognition`) y OpenAI Whisper (ejecutado localmente). Muestra las transcripciones lado a lado para facilitar la comparación.
+Aplicación de escritorio para transcribir archivos de audio utilizando el modelo Whisper de OpenAI ejecutado localmente. Permite la selección de diferentes tamaños de modelo y ofrece un modo de "Depuración" para revisar y editar la transcripción mientras se reproduce el audio sincronizadamente.
 
-Originalmente pensado para audios de WhatsApp, ahora funciona con diversos formatos de audio (MP3, WAV, OGG, etc.) gracias a la conversión mediante `pydub` y `ffmpeg`.
+![Screenshot](https://github.com/ilahuerta-IA/Audio-WhatsApp-a-texto/blob/main/screenshot.png)
 
-<!-- Inserta aquí una captura de pantalla de la aplicación -->
-<!-- Ejemplo: ![Screenshot](screenshot.png) -->
 
 ## Características Principales
 
-*   **Selección de Archivo:** Permite seleccionar archivos de audio en formatos comunes (MP3, WAV, OGG...).
-*   **Conversión Automática:** Convierte automáticamente los archivos seleccionados a formato WAV estándar (pcm\_s16le) usando `ffmpeg` (requerido) para mayor compatibilidad.
-*   **Transcripción Dual:**
-    *   **Google Speech Recognition:** Utiliza la API web gratuita (a través de `speech_recognition`) para una transcripción rápida (simulando tiempo real durante la reproducción).
-    *   **OpenAI Whisper:** Realiza la transcripción localmente utilizando el modelo `tiny` por defecto (configurable en `config.py`).
-*   **Interfaz Comparativa:** Muestra ambas transcripciones en áreas de texto separadas.
-*   **Indicadores Visuales:** Muestra el estado del proceso (cargando, transcribiendo, completado, error) para cada motor.
-*   **Reproducción (Google):** Reproduce el audio mientras se transcribe con Google.
-*   **Funciones Básicas:**
-    *   Copiar texto de cada transcripción al portapapeles.
-    *   Exportar cada transcripción a un archivo `.txt`.
-    *   Opción para detener la transcripción de Google anticipadamente.
+*   **Selección de Archivo:** Permite seleccionar archivos de audio en formatos comunes (MP3, WAV, OGG, FLAC, M4A...).
+*   **Conversión Automática:** Convierte los archivos seleccionados a formato WAV estándar usando `ffmpeg` (requerido) para la transcripción y reproducción.
+*   **Transcripción con Whisper:**
+    *   Utiliza la librería `openai-whisper` para realizar la transcripción localmente.
+    *   Permite seleccionar el modelo Whisper a usar (`tiny`, `base`, `small`, `medium`, `large`) a través de un menú desplegable.
+    *   Muestra advertencias si se seleccionan modelos grandes (`medium`, `large`) en sistemas sin GPU detectada.
+    *   Carga los modelos en un hilo separado con indicación de progreso (simulado).
+*   **Interfaz Gráfica:**
+    *   Muestra el estado del proceso (cargando modelo, convirtiendo audio, transcribiendo, listo, error).
+    *   Muestra la transcripción resultante en un área de texto.
+*   **Modo Depuración:**
+    *   Se activa después de una transcripción exitosa.
+    *   Permite **editar directamente** el texto transcrito en el área de texto.
+    *   Incluye controles de **Play/Pause y Stop** para el audio original.
+    *   **Resalta automáticamente** el segmento de texto que corresponde a la parte del audio que se está reproduciendo.
+*   **Funciones de Resultado:**
+    *   **Copiar** el texto transcrito al portapapeles.
+    *   **Exportar** el texto transcrito a un archivo `.txt`.
+*   **Comprobación de Entorno:** Informa al inicio si detecta drivers NVIDIA y si PyTorch puede usar CUDA (GPU).
 
 ## Requisitos
 
-*   **Python:** Versión 3.9 o superior recomendada.
-*   **FFmpeg:** **Indispensable**. `pydub` lo requiere para cargar y convertir la mayoría de formatos de audio. Debe estar instalado en tu sistema y accesible desde el PATH del sistema. Puedes descargarlo desde [ffmpeg.org](https://ffmpeg.org/download.html).
-*   **Librerías Python:** Las dependencias se listan en `requirements.txt`.
+*   **Python:** Versión 3.9 - 3.11 recomendada.
+*   **FFmpeg:** **Indispensable**. `pydub` lo necesita para cargar y convertir la mayoría de formatos de audio. Debe estar instalado en tu sistema y accesible desde el PATH. Descárgalo desde [ffmpeg.org](https://ffmpeg.org/download.html).
+*   **Librerías Python:** Las dependencias principales se listan en `requirements.txt`.
 
 ## Instalación y Configuración
 
 1.  **Clonar el Repositorio:**
     ```bash
-    git clone https://github.com/ilahuerta-IA/Audio-WhatsApp-a-texto.git
+    # Usando SSH (como lo configuraste)
+    git clone git@github.com:ilahuerta-IA/Audio-WhatsApp-a-texto.git
     cd Audio-WhatsApp-a-texto
     ```
+    *(Si prefieres HTTPS: `git clone https://github.com/ilahuerta-IA/Audio-WhatsApp-a-texto.git`)*
 
-2.  **Instalar FFmpeg:** Descarga FFmpeg desde [ffmpeg.org](https://ffmpeg.org/download.html) y sigue las instrucciones para tu sistema operativo. **Asegúrate de añadir `ffmpeg` (y `ffprobe`) al PATH de tu sistema** para que la aplicación pueda encontrarlo.
+2.  **Instalar FFmpeg:** Descarga FFmpeg desde [ffmpeg.org](https://ffmpeg.org/download.html) (builds de [Gyan.dev](https://gyan.dev/ffmpeg/builds/) son recomendados para Windows). Sigue las instrucciones para tu sistema operativo y **asegúrate de añadir `ffmpeg` (y `ffprobe`) al PATH de tu sistema** para que la aplicación pueda encontrarlo. Puedes verificarlo abriendo una nueva terminal y escribiendo `ffmpeg -version`.
 
-3.  **Crear un Entorno Virtual (Recomendado):**
+3.  **Crear un Entorno Virtual (Muy Recomendado):**
     ```bash
     python -m venv venv
     ```
-    *   En Windows: `venv\Scripts\activate`
-    *   En macOS/Linux: `source venv/bin/activate`
+    *   Activar en Windows (Git Bash/PowerShell): `.\venv\Scripts\activate`
+    *   Activar en macOS/Linux: `source venv/bin/activate`
 
 4.  **Instalar Dependencias Python:**
-    Asegúrate de tener el archivo `requirements.txt` en la raíz del proyecto con el siguiente contenido (o créalo):
-    ```text
-    # requirements.txt
-    pygame
-    SpeechRecognition
-    pydub
-    openai-whisper
-    # Opcional: Si tienes GPU NVIDIA y quieres aceleración para Whisper:
-    # 1. Desinstala openai-whisper si ya lo instalaste: pip uninstall openai-whisper
-    # 2. Instala PyTorch con CUDA: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cuXXX (reemplaza cuXXX con tu versión CUDA, ej. cu118, cu121)
-    # 3. Reinstala Whisper: pip install openai-whisper
-    ```
-    Luego ejecuta:
-    ```bash
-    pip install -r requirements.txt
-    ```
+    *   **(Importante - PyTorch Primero):** Whisper depende de PyTorch. Instálalo según tu sistema y si tienes GPU NVIDIA:
+        *   **Para CPU solamente:**
+            ```bash
+            pip install torch torchvision torchaudio
+            ```
+        *   **Para GPU NVIDIA (CUDA):** Visita [pytorch.org](https://pytorch.org/get-started/locally/) para obtener el comando `pip install` específico para tu versión de CUDA (ej: 11.8, 12.1). Ejemplo para CUDA 12.1:
+            ```bash
+            pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+            ```
+    *   **Instalar el resto de dependencias:**
+        ```bash
+        pip install -r requirements.txt
+        ```
+
+5.  **(Linux - Opcional) Instalar Tkinter:** Si usas Linux y encuentras errores relacionados con `tkinter` o `_tkinter`, puede que necesites instalarlo a nivel de sistema:
+    *   Debian/Ubuntu: `sudo apt-get update && sudo apt-get install python3-tk`
+    *   Fedora: `sudo dnf install python3-tkinter`
 
 ## Uso
 
-1.  **Ejecutar la Aplicación:**
-    Desde el directorio raíz del proyecto (`Audio-WhatsApp-a-texto`), ejecuta:
+1.  **Activar Entorno Virtual:** (Si creaste uno) Asegúrate de tenerlo activado en tu terminal.
+2.  **Navegar al Directorio:** Asegúrate de estar en la carpeta raíz del proyecto (`Audio-WhatsApp-a-texto`) en tu terminal.
+3.  **Ejecutar la Aplicación:**
     ```bash
-    python audio_transcriptor_pro/main.py
+    python main.py
     ```
-    *Nota: Se ejecuta `main.py` dentro del subdirectorio `audio_transcriptor_pro` debido a la estructura refactorizada.*
+4.  **Seleccionar Modelo:** Elige el modelo Whisper que deseas usar en el menú desplegable. Espera a que termine la carga (la barra de progreso desaparecerá).
+5.  **Seleccionar Audio:** Haz clic en "Seleccionar Audio" y elige tu archivo. Espera a que se prepare (convertido a WAV).
+6.  **Transcribir:** Haz clic en "Transcribir". Observa los puntos animados y el estado.
+7.  **Revisar Resultado:** Una vez completado, el texto aparecerá.
+8.  **(Opcional) Depurar:**
+    *   Haz clic en "Depurar". Los controles de audio aparecerán y el área de texto se volverá editable.
+    *   Usa "▶ Play" / "❚❚ Pause" y "■ Stop" para controlar la reproducción.
+    *   El segmento de texto correspondiente al audio que suena se resaltará en amarillo.
+    *   Puedes editar el texto directamente en el área mientras pausas o detienes.
+    *   Haz clic en "Salir Depurar" para volver al modo normal (el texto volverá a ser no editable).
+9.  **Copiar/Exportar:** Usa los botones "Copiar Texto" o "Exportar Texto" (disponibles solo cuando no se está procesando ni depurando) para guardar tu transcripción final (incluyendo tus ediciones si depuraste).
 
-2.  **Seleccionar Audio:** Haz clic en el botón "Seleccionar Audio" y elige un archivo de audio compatible.
-3.  **Esperar Preparación:** La aplicación puede tardar unos segundos si necesita convertir el archivo a WAV. El estado indicará "Listo para transcribir".
-4.  **Transcribir:** Haz clic en el botón "Transcribir".
-5.  **Observar:**
-    *   La transcripción de Google comenzará primero, acompañada de la reproducción del audio. El indicador de estado de Google se pondrá verde.
-    *   Una vez finalizada (o detenida) la parte de Google, comenzará la transcripción con Whisper. El indicador de Whisper mostrará actividad (puntos animados) y se pondrá verde al finalizar (o rojo si hay error).
-    *   La etiqueta de estado general mostrará el paso actual.
-6.  **Resultados:** Una vez completadas ambas transcripciones, puedes usar los botones "Copiar..." o "Exportar..." para cada resultado.
-7.  **Terminar Google:** Si deseas detener la transcripción de Google antes de que termine, usa el botón "Terminar Google". Whisper comenzará igualmente después.
+## Estructura del Proyecto
 
-## Estructura del Proyecto (Refactorizada)
+*   `main.py`: Punto de entrada, inicializa la GUI.
+*   `gui.py`: Clase principal `AudioTranscriptorPro`, maneja la interfaz, estado y orquestación.
+*   `config.py`: Constantes y configuración (versión, modelos, colores, etc.).
+*   `utils.py`: Funciones de utilidad (portapapeles, exportar, checks de sistema).
+*   `audio_handler.py`: Selección de archivo y conversión a WAV usando `pydub`.
+*   `playback.py`: Control de reproducción de audio usando `pygame`.
+*   `whisper_transcriber.py`: Carga de modelo y transcripción con `openai-whisper` en hilos.
+*   `requirements.txt`: Lista de dependencias Python.
+*   `README.md`: Este archivo.
+*   `Main_Block_Diagram.html`: Diagrama visual de la arquitectura.
+*   `.gitignore`: Para ignorar archivos de entorno virtual, caché, etc.
+*   `screenshot.png`: Captura de pantalla de la aplicación.
 
-El código ha sido organizado en módulos para seguir los principios SOLID, mejorando la legibilidad y mantenibilidad:
+## Licencia
+
+Este proyecto utiliza `openai-whisper` que tiene licencia MIT. El código de esta aplicación en sí mismo puede ser considerado bajo misma licencia MIT (La licencia MIT es una licencia de software libre que permite a los usuarios modificar, distribuir y usar el software sin restricciones importantes) 
+

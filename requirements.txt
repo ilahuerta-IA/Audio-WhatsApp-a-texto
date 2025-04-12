@@ -1,5 +1,14 @@
-SpeechRecognition
 pydub
 pygame
 openai-whisper
-wheel 
+torch
+# torchvision y torchaudio son opcionales si solo usas torch para Whisper, pero a menudo se instalan juntos
+# torchvision
+# torchaudio
+
+# Nota: PyTorch (torch) debe instalarse preferiblemente ANTES que openai-whisper.
+#       Consulta https://pytorch.org/get-started/locally/ para el comando de instalación
+#       correcto según tu sistema operativo y si tienes o no GPU NVIDIA (CUDA).
+
+# Nota 2: También necesitas FFmpeg instalado en tu sistema y accesible desde el PATH.
+#         Descarga desde: https://ffmpeg.org/download.html
