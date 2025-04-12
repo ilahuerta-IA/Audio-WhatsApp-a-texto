@@ -38,16 +38,16 @@ if __name__ == "__main__":
         print(f"Iniciando aplicación AudioTranscriptorPro ({config.__version__})...")
         root = tk.Tk()
         # Opcional: Establecer un icono
-        # try:
-        #     # Reemplaza 'icon.ico' o 'icon.png' con tu archivo de icono
-        #     if os.path.exists('icon.ico'):
-        #         root.iconbitmap('icon.ico')
-        #     elif os.path.exists('icon.png'):
-        #         # Para PNG u otros formatos, podrías necesitar PhotoImage
-        #         img = tk.PhotoImage(file='icon.png')
-        #         root.tk.call('wm', 'iconphoto', root._w, img)
-        # except Exception as icon_err:
-        #     print(f"Advertencia: No se pudo establecer el icono de la ventana: {icon_err}")
+        try:
+            # Reemplaza 'icon.ico' o 'icon.png' con tu archivo de icono
+             if os.path.exists('icon.ico'):
+                 root.iconbitmap('icon.ico')
+             elif os.path.exists('icon.png'):
+                 # Para PNG u otros formatos, podrías necesitar PhotoImage
+                 img = tk.PhotoImage(file='icon.png')
+                 root.tk.call('wm', 'iconphoto', root._w, img)
+        except Exception as icon_err:
+             print(f"Advertencia: No se pudo establecer el icono de la ventana: {icon_err}")
 
         app = AudioTranscriptorPro(root)
         root.mainloop()
